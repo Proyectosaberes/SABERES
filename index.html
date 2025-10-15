@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de Currículum Profesional</title>
+<style>
+  * { box-sizing: border-box; font-family: 'Nunito', sans-serif; }
+  body { margin: 0; display: flex; flex-wrap: wrap; background: #f7f7f7; color: #333; transition: background 0.3s, color 0.3s; }
+
+  .formulario { flex: 1; min-width: 320px; max-width: 420px; background: #fff; padding: 25px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1); animation: fadeInLeft 0.8s ease; transition: background 0.3s, color 0.3s; }
+  .formulario h2 { text-align:center; margin-bottom:15px; font-weight:700; }
+  .formulario input, .formulario textarea { width:100%; padding:10px; margin:8px 0 15px; border:1px solid #ccc; border-radius:8px; font-size:15px; outline:none; transition:border 0.2s; background:inherit; color:inherit; }
+  .formulario input:focus, .formulario textarea:focus { border-color:#4caf50; }
+  .formulario label { font-weight:600; font-size:14px; }
+  .switch { display:flex; align-items:center; justify-content:space-between; margin-bottom:15px; }
+  .switch input { appearance:none; width:50px; height:25px; background:#ccc; border-radius:25px; position:relative; cursor:pointer; transition:background 0.3s; }
+  .switch input:checked { background:#4caf50; }
+  .switch input::before { content:''; position:absolute; width:23px; height:23px; background:#fff; border-radius:50%; top:1px; left:1px; transition:transform 0.3s; }
+  .switch input:checked::before { transform:translateX(25px); }
+
+  .cv { flex:2; min-width:400px; background:#fafafa; padding:30px; display:flex; flex-direction:column;
+    animation:fadeInRight 0.8s ease; transition: background 0.3s, color 0.3s; }
+
+  .cv-header { display:flex; align-items:center; gap:20px; border-bottom:2px solid #eee; padding-bottom:15px; }
+  .cv-header img { width:110px; height:110px; border-radius:50%; object-fit:cover; border:3px solid #ddd; }
+  .cv-header h1 { font-size:26px; margin:0; font-weight:700; }
+  .cv-header h3 { margin:3px 0 0; font-weight:500; color:#666; }
+
+  .cv-section { margin-top:20px; }
+  .cv-section h2 { font-size:18px; color:#111; border-bottom:1px solid #ddd; padding-bottom:5px; font-weight:700; }
+  .cv-section p { font-size:15px; line-height:1.6; margin-top:6px; }
+
+  @keyframes fadeInLeft { from { opacity:0; transform:translateX(-30px); } to { opacity:1; transform:translateX(0); } }
+  @keyframes fadeInRight { from { opacity:0; transform:translateX(30px); } to { opacity:1; transform:translateX(0); } }
+
+  /* MENU */
+  .menu-btn { position:fixed; top:15px; left:15px; font-size:28px; background:none; border:none; cursor:pointer; z-index:1001; color:inherit; }
+  .menu { position:fixed; left:-260px; top:0; height:100%; width:260px; background:#333; color:#fff; padding:20px; transition:left 0.3s ease; display:flex; flex-direction:column; gap:20px; z-index:1000; overflow-y:auto; }
+  .menu.open { left:0; }
+  .menu h3 { margin:0 0 10px; border-bottom:1px solid #555; padding-bottom:5px; }
+  .menu p { font-size:14px; line-height:1.5; }
+  .menu ul { list-style:none; padding:0; margin:0; }
+  .menu li { margin-bottom:8px; }
+  .menu a { color:#fff; text-decoration:none; transition:color 0.2s; }
+  .menu a:hover { color:#4caf50; }
+
+  .creador-btn { display:block; background:none; color:#fff; border:none; cursor:pointer; text-align:left; margin:2px 0; padding:2px 4px; font-size:14px; transition:all 0.2s; }
+  .creador-btn:hover { background:#4caf50; border-radius:5px; }
+
+  body.dark { background:#1e1e1e; color:#ddd; }
+  body.dark .formulario { background:#2a2a2a; color:#eee; }
+  body.dark .cv { background:#242424; color:#ddd; }
+  body.dark .cv-header h3 { color:#bbb; }
+  body.dark .menu { background:#111; color:#eee; }
+
+  @media(max-width:800px){ body{flex-direction:column;} .cv{padding:20px;} .cv-header{flex-direction:column;text-align:center;} }
+</style>
+</head>
+<body>
+
+<button class="menu-btn" id="menu-btn">☰</button>
+
+<div class="menu" id="menu">
+  <div>
+    <h3>⚙️ Opciones</h3>
+    <label>Tema oscuro
+      <input type="checkbox" id="dark-toggle">
+    </label>
+  </div>
+  <div>
+    <h3>👨‍🏫 Conocé a los creadores</h3>
+    <div id="creadores">
+      <button class="creador-btn" data-id="rafael">Rafael</button>
+      <button class="creador-btn" data-id="valentino">Valentino</button>
+      <button class="creador-btn" data-id="joako">Joako</button>
+      <button class="creador-btn" data-id="benjamin">Benjamin</button>
+      <button class="creador-btn" data-id="ivan">Ivan</button>
+    </div>
+    <div id="info-creador" style="margin-top:10px; font-size:14px; line-height:1.5;">Seleccioná un nombre para ver la información.</div>
+  </div>
+  <div>
+    <h3>💼 Encontrá trabajo según lo que buscas</h3>
+    <ul>
+      <li><a href="https://www.zonajobs.com.ar/" target="_blank">🔹 ZonaJobs – General</a></li>
+      <li><a href="https://ar.computrabajo.com/trabajo-de-gastronomia" target="_blank">🔹 Computrabajo – Gastronomía</a></li>
+      <li><a href="https://www.empleosit.com.ar/" target="_blank">🔹 Empleo IT – Tecnología</a></li>
+      <li><a href="https://ar.computrabajo.com/empleos-de-medicina-y-salud" target="_blank">🔹 Computrabajo – Salud</a></li>
+      <li><a href="https://ar.computrabajo.com/trabajo-de-educacion" target="_blank">🔹 Computrabajo – Educación</a></li>
+      <li><a href="https://ar.computrabajo.com/trabajo-de-marketing" target="_blank">🔹 Computrabajo – Marketing</a></li>
+      <li><a href="https://ar.computrabajo.com/empleos-de-marketing-y-ventas" target="_blank">🔹 Computrabajo – Ventas</a></li>
+      <li><a href="https://ar.computrabajo.com/empleos-de-ingenieria-y-tecnico" target="_blank">🔹 Computrabajo – Ingeniería</a></li>
+      <li><a href="https://www.buscojobs.com.ar/" target="_blank">🔹 BuscoJobs – General</a></li>
+      <li><a href="https://www.bumeran.com.ar/" target="_blank">🔹 Bumeran – General</a></li>
+    </ul>
+  </div>
+  <div>
+    <h3>💻 Sitio para PC</h3>
+    <p>El sitio se adapta automáticamente a pantallas grandes, medianas y móviles. Disfrutá la experiencia completa desde cualquier dispositivo.</p>
+  </div>
+</div>
+
+<div class="formulario">
+  <h2>📄 Tus Datos</h2>
+  <label>Nombre completo:</label><input type="text" id="nombre" placeholder="Ej: *Catalina Estévez*">
+  <label>Título o profesión:</label><input type="text" id="titulo" placeholder="Ej: **Lic. en Administración**">
+  <label>Descripción breve:</label><textarea id="descripcion" rows="3" placeholder="Soy una persona *proactiva* y responsable..."></textarea>
+  <label>Foto de perfil:</label><input type="file" id="foto" accept="image/*">
+  <label>Contacto:</label><textarea id="contacto" rows="3" placeholder="Tel: (11) 1234-5678 ..."></textarea>
+  <label>Educación:</label><textarea id="educacion" rows="3" placeholder="Universidad B..., 2018..."></textarea>
+  <label>Experiencia laboral:</label><textarea id="experiencia" rows="3" placeholder="Empresa X, 2020 - Presente..."></textarea>
+  <label>Cursos / Idiomas:</label><textarea id="cursos" rows="3" placeholder="*Inglés*, Curso de redes..."></textarea>
+  <div class="switch"><label>¿Completaste la secundaria?</label><input type="checkbox" id="secundaria"></div>
+</div>
+
+<div class="cv" id="cv">
+  <div class="cv-header">
+    <img id="preview" src="https://via.placeholder.com/110" alt="Foto perfil">
+    <div><h1 id="cv-nombre">Nombre Apellido</h1><h3 id="cv-titulo">Profesión o cargo</h3></div>
+  </div>
+  <div class="cv-section"><p id="cv-descripcion">Soy una persona proactiva, organizada y responsable...</p></div>
+  <div class="cv-section"><h2>📞 Contacto</h2><p id="cv-contacto">Tel: (11) 1234-5678</p></div>
+  <div class="cv-section"><h2>🎓 Educación</h2><p id="cv-educacion">Universidad B..., 2018<br>Secundaria incompleta ❌</p></div>
+  <div class="cv-section"><h2>💼 Experiencia Laboral</h2><p id="cv-experiencia">Empresa X, 2020 - Presente</p></div>
+  <div class="cv-section"><h2>📚 Cursos / Idiomas</h2><p id="cv-cursos">Inglés avanzado, Redes Sociales</p></div>
+</div>
+
+<script>
+function formatearTexto(texto){ return texto.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>'); }
+
+const campos=['nombre','titulo','descripcion','contacto','educacion','experiencia','cursos'];
+campos.forEach(id=>{
+  document.getElementById(id).addEventListener('input',()=>{
+    document.getElementById('cv-'+id).innerHTML=formatearTexto(document.getElementById(id).value);
+  });
+});
+
+document.getElementById('foto').addEventListener('change',function(){
+  const file=this.files[0]; if(file){ const reader=new FileReader();
+    reader.onload=e=>document.getElementById('preview').src=e.target.result;
+    reader.readAsDataURL(file);
+  }
+});
+
+const secundaria=document.getElementById('secundaria');
+secundaria.addEventListener('change',function(){
+  const edu=document.getElementById('cv-educacion');
+  if(this.checked){ edu.innerHTML=formatearTexto(document.getElementById('educacion').value)+"<br>Secundaria completa ✅"; }
+  else{ edu.innerHTML=formatearTexto(document.getElementById('educacion').value)+"<br>Secundaria incompleta ❌"; }
+});
+secundaria.checked=false;
+
+const menuBtn=document.getElementById('menu-btn');
+const menu=document.getElementById('menu');
+menuBtn.addEventListener('click',()=>{ menu.classList.toggle('open'); });
+
+document.getElementById('dark-toggle').addEventListener('change',function(){ document.body.classList.toggle('dark', this.checked); });
+
+const creadoresInfo={
+  rafael:"rafa.mdp",
+  valentino:"Gian_10s",
+  joako:"joakoo_molina22",
+  benjamin:"Benja_bmz",
+  ivan:"Coca_cola_azúcar"
+};
+const btns=document.querySelectorAll('.creador-btn');
+const info=document.getElementById('info-creador');
+btns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const id=btn.getAttribute('data-id'); info.innerHTML=creadoresInfo[id];
+    btns.forEach(b=>b.style.background='none'); btn.style.background='#4caf50'; btn.style.color='#fff'; btn.style.borderRadius='5px'; btn.style.padding='3px 6px';
+  });
+});
+</script>
+</body>
+</html>
